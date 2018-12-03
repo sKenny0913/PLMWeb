@@ -1,0 +1,83 @@
+<!-- <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> -->
+<!DOCTYPE html>
+<html>
+<title>PLM Web</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../vendor/w3/css/w3.css">
+<link rel="stylesheet" href="../vendor/Montserrat/css/Montserrat.css">
+<link rel="stylesheet" href="../vendor/font-awesome-4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../plmweb/css/plmweb.css">
+
+<body class="w3-white">
+    <script src="../vendor/w3/js/w3.js"></script>
+    <script src="../vendor/jquery/js/jquery.min.js"></script>
+    <script src="../vendor/jquery/js/jquery.cookie.js"></script>
+    <script src="../vendor/jquery/js/jquery.validate.min.js"></script>
+    <script src="../plmweb/js/plmweb.js"></script>
+    <script src="../plmweb/js/login.js"></script>
+    <!-- Icon Bar (Sidebar - hidden on small screens) -->
+    <div class="w3-black" id="nav-placeholder"> </div>
+    <!-- Page Content -->
+    <div class="w3-padding-large" id="main">
+        <div class="w3-container w3-padding-8 w3-margin-left w3-hide-small">
+            <button id="openNav" class="w3-border w3-border-black w3-button w3-white w3-large" onclick="w3_open()" style="display:none">&#9776;</button>
+        </div>
+        <!-- Header/Home -->
+        <header class="w3-container w3-padding-8 w3-center" id="home">
+            <h4 class="w3-jumbo">CKD-ID Comparison</h4> </header>
+        <!-- Contact Section -->
+        <form id="idForm">
+            <div class="w3-row-padding" style="margin:8px -16px;">
+                <div class="w3-half w3-margin-bottom">
+                    <label> Part Number:</label>
+                    <input id="inputPN" class="w3-input w3-border" type="text" name="PN" required> </div>
+                <div class="w3-half w3-margin-bottom">
+                    <label> Compare Part Number:</label>
+                    <input id="inputCPN" class="w3-input w3-border" type="text" name="CPN" required placeholder="COMPARE-廠區-BU-Function Group-流水號"> </div>
+            </div>
+            <input type="button" class="Report w3-button w3-dark-grey" id="btnCompare" value="Compare">
+            <input type="button" class="Report w3-button w3-dark-grey" id="btnClear" value="Clear" onclick="clearValue()"> </form>
+        <div id="result" class="w3-padding-32">
+            <h2 class="w3-text-dark-grey w3-margin-right" style="display:inline">Result:</h2>
+            <button id="btnCopy" class="w3-button w3-white w3-border w3-medium" onclick="selectElementContents( document.getElementById('idRTable2'))">Copy to Clipboard</button>
+            <hr style="width:200px" class="hr2 w3-opacity">
+            <div class="clsStations w3-section w3-responsive" id="idDivStations">
+                <table class="w3-margin-top w3-table-all w3-light-grey" id="idRTable2">
+                    <tr class="w3-large">
+                        <td colspan="3">CKDID Differences</td>
+                        <td colspan="4"> </td>
+                    </tr>
+                    <tr class="w3-large w3-white">
+                        <td class="w3-border-right" colspan="3" id="idPN1"></td>
+                        <td colspan="4" id="idCPN1"></td>
+                    </tr>
+                    <tr class="w3-large w3-white">
+                        <td>Part#</td>
+                        <td>Qty</td>
+                        <td class="w3-border-right">CKDID</td>
+                        <td>CPart#</td>
+                        <td>Qty</td>
+                        <td>CKDID</td>
+                        <td>Desc</td>
+                    </tr>
+                    <tr class="w3-medium w3-border" w3-repeat="jsonName">
+                        <td>{{PN}}</td>
+                        <td>{{PN_QTY}}</td>
+                        <td class="w3-border-right">{{PN_CKDID}}</td>
+                        <td>{{CPN}}</td>
+                        <td>{{CPN_QTY}}</td>
+                        <td>{{CPN_CKDID}}</td>
+                        <td>{{CPN_Desc}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <!-- End Contact Section -->
+    </div>
+    <!-- END PAGE CONTENT -->
+    <div id="login-placeholder"> </div>
+    <div class="w3-black" id="loading-placeholder"> </div>
+</body>
+
+</html>

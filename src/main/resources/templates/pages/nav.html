@@ -1,0 +1,68 @@
+<style>
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-family: "Montserrat", sans-serif
+    }
+    
+    .w3-row-padding img {
+        margin-bottom: 12px
+    }
+    /* Set the width of the sidebar to 120px */
+    
+    .w3-sidebar {
+        width: 200px;
+        background: #222;
+    }
+    /* Add a left margin to the"page content" that matches the width of the sidebar (120px) */
+    
+    #main {
+        margin-left: 200px
+    }
+    /* Remove margins from"page content" on small screens */
+    
+    @media only screen and (max-width: 600px) {
+        #main {
+            margin-left: 0
+        }
+    }
+</style>
+<!-- Icon Bar (Sidebar - hidden on small screens) -->
+<nav id="mySidebar" class="w3-sidebar w3-bar-block w3-small w3-hide-small w3-left w3-animate-left">
+    <button class="w3-bar-item w3-button w3-medium w3-center" onclick="w3_close()">Close &times;</button>
+    <a class="w3-bar-item w3-button w3-middle" onclick="document.getElementById('idDivLogin').style.display='block'"> <i class="fa fa-user fa-fw w3-large"></i>
+        <p class="w3-medium" style="display:inline" id="idPuserName">Login</p>
+    </a>
+    <a href="/" class="w3-bar-item w3-button w3-hover-grey"> <i class="fa fa-home w3-large"></i>
+        <p class="w3-medium" style="display:inline">Home</p>
+    </a>
+    <a href="/pages/inactivate" target="_top" class="w3-bar-item w3-button w3-middle"> <i class="fa fa-ban fa-fw w3-large"></i>
+        <p class="w3-medium" style="display:inline">Inactivate</p>
+    </a>
+    <div class="w3-dropdown-hover">
+        <a class="w3-bar-item w3-button w3-middle"> <i class="fa fa-table fa-fw w3-large"></i><i class="fa fa-caret-down w3-right w3-large"></i>
+            <p class="w3-medium" style="display:inline">Report</p>
+        </a>
+        <div class="w3-dropdown-content w3-bar-block"> <a href="/pages/report01" target="_top" class="w3-bar-item w3-button">01. CKD-ID Comparison</a> </div>
+    </div>
+</nav>
+<!-- Navbar on small screens (Hidden on medium and large screens) -->
+<div class="w3-top w3-hide-large w3-hide-medium" id="myNavbar">
+    <div class="w3-bar w3-black  w3-center w3-small">
+        <a class="w3-bar-item w3-button w3-middle" onclick="document.getElementById('idDivLogin').style.display='block'">
+            <p class="w3-small" style="display:inline" id="idPuserName1">Login</p>
+        </a> <a href="/" class="w3-bar-item w3-button">HOME</a>
+        <a href="/pages/inactivate" target="_top" class="w3-bar-item w3-button w3-middle">
+            <p class="w3-small" style="display:inline">Inactivate</p>
+        </a>
+        <div class="w3-dropdown-hover "> <a class="w3-button w3-small"><i class="fa fa-caret-down w3-right w3-small"></i>
+                <p class="w3-small" style="display:inline">Report</p>
+            </a>
+            <div class="w3-dropdown-content w3-bar-block w3-border"> <a href="/pages/report01" target="_top" class="w3-bar-item w3-button">CKD-ID Comparison</a> </div>
+        </div>
+    </div>
+</div>

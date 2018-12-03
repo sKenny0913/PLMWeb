@@ -1,0 +1,23 @@
+<!------------Login/Logout--------------->
+<div id="idDivLogin" class="w3-modal">
+    <div class="w3-modal-content w3-card-8 w3-animate-zoom w3-black" style="max-width:600px">
+        <div class="w3-center">
+            <br> <span onclick="document.getElementById('idDivLogin').style.display='none'" class=" w3-large w3-button w3-display-topright" title="Close Modal">&times;</span> </div>
+        <form id='formLogin' class="w3-container" method="post" name="LoginSession" action="/login">
+            <div class="w3-section">
+                <label class="login"><b>Username</b></label>
+                <input id='userid' value='01040018' class="w3-input w3-border w3-margin-bottom login" type="text" placeholder="Enter Username" name="UserID" required>
+                <label class="login"><b>Password</b></label>
+                <input id='pwd' value='Qwdqwd30' class="w3-input w3-border login" type="password" placeholder="Enter Password" name="Password" required>
+                <input type="button" class="w3-button w3-dark-grey w3-margin-top login" id="idBtnLogin" value="Login">
+                <input type="button" class="w3-button w3-dark-grey w3-margin-top" id="idBtnLogout" value="Logout"> <span id='idSpanLoginResult' class="w3-container w3-section w3-text-white w3-right w3-round-large"></span>
+                <!--
+                        <br>
+<input id="idCheckBox" class="w3-check w3-margin-top" type="checkbox"> Remember me
+-->
+            </div>
+        </form>
+        <div class="w3-container w3-border-top w3-padding-16 w3-black">
+            <input type="button" class="w3-button w3-dark-grey" id="idBtnCancel" value="Cancel" onclick="document.getElementById('idDivLogin').style.display='none'"><span class="w3-right w3-padding w3-hide-small">Forgot <a href="http://plm01.qsitw.com/Agile/ExternalServlet?module=LoginHandler&opcode=showForgotPassword&localeStr=en_US">password?</a></span> </div>
+    </div>
+</div>

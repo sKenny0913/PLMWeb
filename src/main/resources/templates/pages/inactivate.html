@@ -1,0 +1,53 @@
+<!-- <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%> -->
+<!DOCTYPE html>
+<html>
+<title>PLM Web</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../vendor/w3/css/w3.css">
+<link rel="stylesheet" href="../vendor/Montserrat/css/Montserrat.css">
+<link rel="stylesheet" href="../vendor/font-awesome-4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="../plmweb/css/plmweb.css">
+
+<body class="w3-white">
+    <script src="../vendor/w3/js/w3.js"></script>
+    <script src="../vendor/jquery/js/jquery.min.js"></script>
+    <script src="../vendor/jquery/js/jquery.cookie.js"></script>
+    <script src="../vendor/jquery/js/jquery.validate.min.js"></script>
+    <script src="../plmweb/js/plmweb.js"></script>
+    <script src="../plmweb/js/login.js"></script>
+    <!-- Icon Bar (Sidebar - hidden on small screens) -->
+    <div class="w3-black" id="nav-placeholder"> </div>
+    <!-- Page Content -->
+    <div class="w3-padding-large" id="main">
+        <div class="w3-container w3-padding-8 w3-margin-left w3-hide-small">
+            <button id="openNav" class="w3-border w3-border-black w3-button w3-white w3-large" onclick="w3_open()" style="display:none">&#9776;</button>
+        </div>
+        <!-- Header/Home -->
+        <header class="w3-container w3-padding-8 w3-center" id="home">
+            <h4 class="w3-jumbo">Inactivate</h4> </header>
+        <!-- Contact Section -->
+        <form id="idForm">
+            <div class="w3-row-padding" style="margin:8px -16px;">
+                <div class="w3-half w3-margin-bottom">
+                    <label> User Email Name:</label>
+                    <input id="inputUsername" class="w3-input w3-border" type="text" name="col1" placeholder="e.g. jacky.chen" value="nick.lu" required> </div>
+                <div class="w3-half w3-margin-bottom">
+                    <label> Description:</label>
+                    <input id="inputDesc" class="w3-input w3-border" type="text" name="col2" value="123" required> </div>
+            </div>
+            <input type="button" class="Inactivate w3-button w3-dark-grey" id="btnInactivate" value="Inactivate">
+            <input type="button" class="Inactivate w3-button w3-dark-grey" id="btnClear" value="Clear" onclick="clearValue()"> </form>
+        <div id="result" class="w3-padding-32">
+            <h2 class="w3-text-dark-grey w3-margin-right" style="display:inline">Result:</h2>
+            <hr style="width:200px" class="hr2 w3-opacity">
+            <p class="w3-xlarge" id="idResponse"></p>
+        </div>
+        <!-- End Contact Section -->
+    </div>
+    <!-- END PAGE CONTENT -->
+    <div id="login-placeholder"> </div>
+    <div class="w3-black" id="loading-placeholder"> </div>
+</body>
+
+</html>
