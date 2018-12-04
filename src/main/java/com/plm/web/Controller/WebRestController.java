@@ -2,9 +2,11 @@ package com.plm.web.Controller;
 
 import com.agile.api.APIException;
 import com.agile.api.IAgileSession;
+import com.agile.api.IUser;
 import com.plm.web.Model.LoginSession;
 import com.plm.web.Service.CompareService;
 import com.plm.web.Service.ProductLine;
+import com.qsi.agile.CheckSDKAuthority;
 import com.plm.web.Service.Login;
 import com.plm.web.Service.Inactivate;
 
@@ -79,6 +81,14 @@ public class WebRestController {
 	@RequestMapping(value = { "/login" }, method = { RequestMethod.POST })
 	public String Login(@ModelAttribute("LoginSession") LoginSession LS, HttpSession session) throws APIException {
 		agileSession = this.Login.agileLogin(LS.getUsername(), LS.getPassword(), session);
+		CheckSDKAuthority sdkTool = new CheckSDKAuthority((IUser)agileSession.getObject(IUser.OBJECT_TYPE, LS.getUsername()));
+		if (sdkTool.CheckAuthorityInUserRole("Administrator")) {
+//			System.out.println("insufficient privilege");
+//			throw new Exception(sbResult.toString());
+			return "Administrator";
+		}else if(sdkTool.CheckAuthorityInUserRole("A01. CCB Admin")) {
+			return "A01. CCB Admin";
+		}
 		return agileSession.getCurrentUser().getName().toString();
 	}
 

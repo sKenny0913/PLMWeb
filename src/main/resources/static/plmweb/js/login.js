@@ -1,7 +1,7 @@
 var userid;
 var password;
 $(document).ready(function () {
-    $("#login-placeholder").load("Login", function () {
+    $("#login-placeholder").load("../pages/Login", function () {
         initialize();
         $("#idBtnLogin").click(function () {
             userid = $('#userid').val();
@@ -15,7 +15,7 @@ $(document).ready(function () {
             initialize();
             setTimeout(location.reload.bind(location), 0);
         });
-        if (typeof $.cookie('token') !== 'undefined') {
+        if (typeof $.cookie('userid') !== 'undefined') {
             console.log($.cookie('userid') + ' ' + $.cookie('password'));
             console.log($.cookie('userid') != 'undefined');
             console.log($.cookie('password') != 'undefined');
