@@ -1,10 +1,10 @@
-var serverAddress = 'http://localhost:8080/PLMWeb/';
-//var serverAddress = 'http://plmweb.tech-man.com.cn:8080/PLMWeb/';
+//var serverAddress = 'http://localhost:8080/PLMWeb/';
+var serverAddress = 'http://plmweb.tech-man.com.cn:8080/PLMWeb/';
 //var serverAddress = 'http://192.168.99.100:8080/PLMWeb/'; //docker IP
 $(function () {
     initialize();
-    $("#nav-placeholder").load("../pages/nav", function () {});
-    $("#loading-placeholder").load("../pages/loading", function () {});
+    $("#nav-placeholder").load("../pages/nav.html", function () {});
+    $("#loading-placeholder").load("../pages/loading.html", function () {});
     $("#btnCompare").click(function () {
         if ($('#idForm').valid()) {
             Compare();
@@ -68,6 +68,8 @@ function Loading() {
 
 function initialize() {
     //    $("#idRTable").hide();
+    $(".admin").hide();
+    $(".dcc").hide();
     $("#result").hide();
     $(".login").show();
     $("#idBtnLogout").hide();

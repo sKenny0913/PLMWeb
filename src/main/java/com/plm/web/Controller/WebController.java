@@ -18,31 +18,60 @@ public class WebController
     return "pages/index";
   }
   
-  @GetMapping({"/pages/nav"})
+//  @GetMapping({"/pages/nav"})
+//  public String nav()
+//  {
+//    return "pages/nav.html";
+//  }
+//  
+//  @GetMapping({"/pages/report01"})
+//  public String report01()
+//  {
+//    return "pages/report01.html";
+//  }
+//  
+//  @GetMapping({"/pages/loading"})
+//  public String loading()
+//  {
+//    return "pages/loading.html";
+//  }
+//  @GetMapping({"/pages/inactivate"})
+//  public String inactivate()
+//  {
+//    return "pages/inactivate.html";
+//  }
+//  @GetMapping({"/pages/Login"})
+//  public String Login()
+//  {
+//    return "pages/Login.html";
+//  }
+  
+  @GetMapping({"/pages/nav.html"})
   public String nav()
   {
-    return "pages/nav.html";
+    return "pages/nav";
   }
   
-  @GetMapping({"/pages/report01"})
+  @GetMapping({"/pages/report01.html"})
   public String report01()
   {
-    return "pages/report01.html";
+    return "pages/report01";
   }
   
-  @GetMapping({"/pages/loading"})
+  @GetMapping({"/pages/loading.html"})
   public String loading()
   {
-    return "pages/loading.html";
+    return "pages/loading";
   }
-  @GetMapping({"/pages/inactivate"})
+  @GetMapping({"/pages/inactivate.html"})
   public String inactivate()
   {
-    return "pages/inactivate.html";
+    return "pages/inactivate";
   }
-  @GetMapping({"/pages/Login"})
+  @GetMapping({"/pages/Login.html"})
   public String Login()
   {
-    return "pages/Login.html";
+    return "pages/Login";
   }
+  
 }
