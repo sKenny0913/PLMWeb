@@ -1,5 +1,5 @@
-//var serverAddress = 'http://localhost:8080/PLMWeb/';
-var serverAddress = 'http://plmweb.tech-man.com.cn:8080/PLMWeb/';
+var serverAddress = 'http://localhost:8080/PLMWeb/';
+//var serverAddress = 'http://plmweb.tech-man.com.cn:8080/PLMWeb/';
 //var serverAddress = 'http://192.168.99.100:8080/PLMWeb/'; //docker IP
 $(function () {
     initialize();
