@@ -15,7 +15,6 @@ import com.agile.api.IListLibrary;
 public class getDropdownList {
 
 	public String getDropdownList(IAgileSession agileSession) throws APIException, JSONException {
-
 		String sResult = null;
 		if (agileSession == null) {
 			sResult = "please login first";
@@ -37,7 +36,6 @@ public class getDropdownList {
 		}
 		JSONObject joR = new JSONObject();
 		joR.put("joR", ja);
-
 		return joR.toString();
 
 	}

@@ -11,7 +11,7 @@ import com.plm.web.Service.Login;
 import com.plm.web.Service.Inactivate;
 import com.plm.web.Service.ListMaintain;
 import com.plm.web.Service.getDropdownList;
-import com.plm.web.Service.getListValue;
+import com.plm.web.Service.ListValueMaintain;
 
 import java.sql.SQLException;
 
@@ -47,7 +47,7 @@ public class WebRestController {
 	@Autowired
 	getDropdownList getDropdownList;
 	@Autowired
-	getListValue getListValue;
+	ListValueMaintain ListValueMaintain;
 
 	@CrossOrigin
 	@RequestMapping(value = { "/compareCKDID/{PN}&{CPN}" }, method = { RequestMethod.GET }, produces = {
@@ -137,7 +137,43 @@ public class WebRestController {
 	public String getListValue(@ModelAttribute("message") String msg, @PathVariable String listName) throws APIException {
 		String sResult = null;
 		try {
-			sResult = this.getListValue.getListValue(agileSession, listName);
+			sResult = this.ListValueMaintain.getListValue(agileSession, listName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return e.getMessage();
+		}
+		return sResult;
+	}
+	@CrossOrigin
+	@RequestMapping(value = { "/getListValue/{listName}&{listValue}" }, method = { RequestMethod.POST })
+	public String postListValue(@ModelAttribute("message") String msg, @PathVariable String listName, @PathVariable String listValue) throws APIException {
+		String sResult = null;
+		try {
+			sResult = this.ListValueMaintain.addListValue(agileSession, listName, listValue);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return e.getMessage();
+		}
+		return sResult;
+	}
+	@CrossOrigin
+	@RequestMapping(value = { "/getListValue/{listName}&{oListValue}&{nListValue}" }, method = { RequestMethod.PUT })
+	public String putListValue(@ModelAttribute("message") String msg, @PathVariable String listName, @PathVariable String oListValue, @PathVariable String nListValue) throws APIException {
+		String sResult = null;
+		try {
+			sResult = this.ListValueMaintain.updateListValue(agileSession, listName, oListValue, nListValue);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			return e.getMessage();
+		}
+		return sResult;
+	}
+	@CrossOrigin
+	@RequestMapping(value = { "/getListValue/{listName}&{listValue}" }, method = { RequestMethod.DELETE })
+	public String deleteListValue(@ModelAttribute("message") String msg, @PathVariable String listName, @PathVariable String listValue) throws APIException {
+		String sResult = null;
+		try {
+			sResult = this.ListValueMaintain.deleteListValue(agileSession, listName, listValue);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			return e.getMessage();

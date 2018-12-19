@@ -18,60 +18,44 @@ public class WebController
     return "pages/index";
   }
   
-//  @GetMapping({"/pages/nav"})
-//  public String nav()
-//  {
-//    return "pages/nav.html";
-//  }
-//  
-//  @GetMapping({"/pages/report01"})
-//  public String report01()
-//  {
-//    return "pages/report01.html";
-//  }
-//  
-//  @GetMapping({"/pages/loading"})
-//  public String loading()
-//  {
-//    return "pages/loading.html";
-//  }
-//  @GetMapping({"/pages/inactivate"})
-//  public String inactivate()
-//  {
-//    return "pages/inactivate.html";
-//  }
-//  @GetMapping({"/pages/Login"})
-//  public String Login()
-//  {
-//    return "pages/Login.html";
-//  }
-  
+  //--------------.load(plmweb.js, login.js)---------------
   @GetMapping({"/pages/nav.html"})
   public String nav()
   {
     return "pages/nav";
   }
-  
+  @GetMapping({"/pages/loading.html"})
+  public String loading()
+  {
+	  return "pages/loading";
+  }
+  @GetMapping({"/pages/confirm.html"})
+  public String confirm()
+  {
+	  return "pages/confirm";
+  }
+  @GetMapping({"/pages/Login.html"})
+  public String Login()
+  {
+    return "pages/Login";
+  }
+  //-------------href(nav.html)----------------
   @GetMapping({"/pages/report01.html"})
   public String report01()
   {
     return "pages/report01";
   }
   
-  @GetMapping({"/pages/loading.html"})
-  public String loading()
-  {
-    return "pages/loading";
-  }
   @GetMapping({"/pages/inactivate.html"})
   public String inactivate()
   {
     return "pages/inactivate";
   }
-  @GetMapping({"/pages/Login.html"})
-  public String Login()
+
+  @GetMapping({"/pages/ListMaintain.html"})
+  public String ListMaintain()
   {
-    return "pages/Login";
+    return "pages/ListMaintain";
   }
   
 }

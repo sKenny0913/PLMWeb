@@ -1,10 +1,13 @@
-var serverAddress = 'http://localhost:8080/PLMWeb/';
-//var serverAddress = 'http://plmweb.tech-man.com.cn:8080/PLMWeb/';
+//var serverAddress = 'http://localhost:8080/PLMWeb/';
+var serverAddress = 'http://plmweb.tech-man.com.cn:8080/PLMWeb/';
 //var serverAddress = 'http://192.168.99.100:8080/PLMWeb/'; //docker IP
+var oListValue = null;
+//----------------------main function---------------------
 $(function () {
     initialize();
     $("#nav-placeholder").load("../pages/nav.html", function () {});
     $("#loading-placeholder").load("../pages/loading.html", function () {});
+    $("#confirm-placeholder").load("../pages/confirm.html", function () {});
     $("#btnCompare").click(function () {
         if ($('#idForm').valid()) {
             Compare();
@@ -15,33 +18,41 @@ $(function () {
             Inactivate();
         }
     });
+    $("#btnListQuery").click(function () {
+        getListValue();
+    });
+    $("#btnListAdd").click(function () {
+        if ($('#idForm').valid()) {
+            addListValue();
+        }
+    });
+    $("#btnListUpdate").click(function () {
+        if ($('#idForm').valid()) {
+            if (oListValue != null) {
+                updateListValue();
+            }
+            else {
+                alert("pls select a row")
+            }
+        }
+    });
+    $("#btnListDelete").click(function () {
+        if ($('#idForm').valid()) {
+            deleteListValue();
+        }
+    });
+    if (window.location.pathname == '/pages/ListMaintain.html') {
+        getList();
+    }
+});
+$(document).on('click', '.w3-medium', function () {
+    oListValue = $(this).find("td:eq(0)").text().trim();
+    $("#listValue").val(oListValue);
+    $(window).scrollTop(0);
+    //console.log(url);
+    //    w3.getHttpObject(url, displayRDetail);
 });
 //----------------------public js----------------------------
-function selectElementContents(el) {
-    var body = document.body
-        , range, sel;
-    if (document.createRange && window.getSelection) {
-        range = document.createRange();
-        sel = window.getSelection();
-        sel.removeAllRanges();
-        try {
-            range.selectNodeContents(el);
-            sel.addRange(range);
-        }
-        catch (e) {
-            range.selectNode(el);
-            sel.addRange(range);
-        }
-    }
-    else if (body.createTextRange) {
-        range = body.createTextRange();
-        range.moveToElementText(el);
-        range.select();
-    }
-    document.execCommand("Copy");
-    alert('table copied.')
-}
-
 function w3_open() {
     document.getElementById("main").style.marginLeft = "20%";
     document.getElementById("mySidebar").style.width = "20%";
@@ -73,8 +84,20 @@ function initialize() {
     $("#result").hide();
     $(".login").show();
     $("#idBtnLogout").hide();
+    $(".req").show();
+    //    $(".res").hide();
+    //    $(".res").show();
 }
-//------------------------------------------------------------
+
+function resultShow() {
+    $("#result").show();
+    $("#idSpinner").hide();
+    $('#idLoader').delay(2000).fadeOut('fast')
+    setTimeout(function () {
+        $("#idSpinner").show();
+        $("#idResult").text('Loading...');
+    }, 3000);
+}
 //----------------------compare js----------------------------
 function Compare() {
     //    var urlBOM = serverAddress + "compareBOM/";
@@ -135,7 +158,6 @@ function getResultCKDID(dataArray) {
     $('#idPN1').text(sPN);
     $('#idCPN1').text(sCPN);
 }
-//------------------------------------------------------------
 //----------------------inactivate js----------------------------
 function Inactivate() {
     //    var urlBOM = serverAddress + "compareBOM/";
@@ -148,16 +170,149 @@ function Inactivate() {
     //        console.log(urlFinalCKDID);
     Loading();
     $.get(urlFinal, function (res) {}).done(function (res) {
-        document.getElementById('idResult').innerHTML = res;
+        $("#idResult").text('success: ' + res);
         $("#idResponse").text(res);
     }).fail(function (res) {
-        document.getElementById('idResult').innerHTML = res;
+        $("#idResult").text('failed: ' + res);
         $("#idResponse").text(res);
     }).always(function () {
         //        alert("finished");
-        $("#result").show();
-        $("#idSpinner").hide();
-        $('#idLoader').delay(1000).fadeOut('fast')
-    });;
+        resultShow();
+    });
     //    w3.getHttpObject(urlFinalBOM, getResultBOM);
+}
+//--------------------list maintain js --------------------
+function getList() {
+    var url = serverAddress + "getDropdownList";
+    var urlFinal = url;
+    w3.getHttpObject(urlFinal, function (res) {
+        //        console.log(res.joR.length);
+        //        console.log(urlFinal);
+        if (res != null) {
+            if (res.joR.length > 0) {
+                w3.displayObject("dropdownList", res);
+                $(".res").show();
+                $(".req").hide();
+            }
+            else {
+                $(".res").hide();
+                $(".req").text("list not exsit, please check.");
+            }
+        }
+        else {
+            $(".res").hide();
+            $(".req").text("Get dropdown list failed, please check.");
+        }
+    });
+}
+
+function getListValue() {
+    var url = serverAddress + "getListValue/";
+    var sListName = $("#dropdownList").val();
+    var urlFinal = url + sListName;
+    //    console.log(urlFinal);
+    w3.getHttpObject(urlFinal, function (res) {
+        //        console.log(res.joR.length);
+        //        console.log(res);
+        if (res != null) {
+            if (res.joR.length > 0) {
+                w3.displayObject("idRTable", res);
+                $("#result").show();
+            }
+            else {
+                alert("no data in this list.");
+            }
+        }
+        else {
+            alert("Get list value failed, please check.");
+        }
+    });
+}
+
+function addListValue() {
+    $("#result").hide();
+    var url = serverAddress + "getListValue/";
+    var sListName = $("#dropdownList").val();
+    var sListValue = $("#listValue").val();
+    var urlFinal = url + sListName + '&' + sListValue;
+    //    console.log(urlFinal);
+    $("#idLoader").show();
+    $.ajax({
+        url: urlFinal
+        , type: 'POST'
+        , success: function (res) {
+            $("#idResult").text('success: ' + res);
+            getListValue()
+        }
+        , error: function (res) {
+            $("#idResult").text('failed: ' + res);
+        }
+    }).always(function () {
+        //        alert("finished");
+        resultShow();
+    });
+}
+
+function updateListValue() {
+    $("#result").hide();
+    var url = serverAddress + "getListValue/";
+    var sListName = $("#dropdownList").val();
+    var sOlistValue = oListValue;
+    var sNlistValue = $("#listValue").val();
+    var urlFinal = url + sListName + '&' + sOlistValue + '&' + sNlistValue;
+    $("#idConfirm").show();
+    $("#idConfirmText").text('are you sure update ' + sOlistValue + ' to ' + sNlistValue + '?');
+    //    console.log(urlFinal);
+    //    $("#idConfirm").show();
+    $("#btnYes").click(function () {
+        $("#idLoader").show();
+        $("#idConfirm").hide();
+        $.ajax({
+            url: urlFinal
+            , type: 'PUT'
+            , success: function (res) {
+                $("#idResult").text('success: ' + res);
+                getListValue()
+                oListValue = null
+            }
+            , error: function (res) {
+                $("#idResult").text('failed: ' + res);
+                oListValue = null
+            }
+        }).always(function () {
+            //        alert("finished");
+            resultShow();
+        });
+    });
+}
+
+function deleteListValue() {
+    $("#result").hide();
+    var url = serverAddress + "getListValue/";
+    var sListName = $("#dropdownList").val();
+    var sListValue = $("#listValue").val();
+    var urlFinal = url + sListName + '&' + sListValue;
+    //    console.log(urlFinal);
+    $("#idConfirm").show();
+    $("#idConfirmText").text('are you sure delete ' + sListValue + '?');
+    //    console.log(urlFinal);
+    //    $("#idConfirm").show();
+    $("#btnYes").click(function () {
+        $("#idLoader").show();
+        $("#idConfirm").hide();
+        $.ajax({
+            url: urlFinal
+            , type: 'DELETE'
+            , success: function (res) {
+                $("#idResult").text('success: ' + res);
+                getListValue()
+            }
+            , error: function (res) {
+                $("#idResult").text('failed: ' + res);
+            }
+        }).always(function () {
+            //        alert("finished");
+            resultShow();
+        });
+    });
 }
