@@ -7,6 +7,7 @@ import com.plm.web.Model.LoginSession;
 import com.plm.web.Service.CompareService;
 import com.plm.web.Service.ProductLine;
 import com.qsi.agile.CheckSDKAuthority;
+import com.qsi.agile.ConnectAgileUtil;
 import com.plm.web.Service.Login;
 import com.plm.web.Service.Inactivate;
 import com.plm.web.Service.ListMaintain;
@@ -15,6 +16,7 @@ import com.plm.web.Service.ListValueMaintain;
 
 import java.sql.SQLException;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONException;
@@ -33,7 +35,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class WebRestController {
 
 	IAgileSession agileSession = null;
+	IAgileSession agileSession1 = null;
 
+	
+	
 	@Autowired
 	CompareService CompareService;
 	@Autowired
@@ -49,6 +54,17 @@ public class WebRestController {
 	@Autowired
 	ListValueMaintain ListValueMaintain;
 
+
+	@PostConstruct
+	public void foo() {
+		try {
+			agileSession1 = ConnectAgileUtil.connect23("it_plmweb", "Plmweb123");
+		} catch (APIException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
+		}
+	}
+	
 	@CrossOrigin
 	@RequestMapping(value = { "/compareCKDID/{PN}&{CPN}" }, method = { RequestMethod.GET }, produces = {
 			"application/json" })
@@ -69,25 +85,33 @@ public class WebRestController {
 	@CrossOrigin
 	@RequestMapping(value = { "/productLine" }, method = { RequestMethod.GET })
 	public String ProductLine(@ModelAttribute("message") String msg, @RequestParam String productCode) {
-		String sResult = this.ProductLine.add(productCode);
+		String sResult = this.ProductLine.add(productCode, agileSession1);
 		System.out.println(productCode + " added");
 		return sResult;
 	}
 
 	@CrossOrigin
 	@RequestMapping(value = { "/login" }, method = { RequestMethod.POST })
-	public String Login(@ModelAttribute("LoginSession") LoginSession LS, HttpSession session) throws APIException {
+	public String Login(@ModelAttribute("LoginSession") LoginSession LS, HttpSession session) {
+		String sResult;
 		agileSession = this.Login.agileLogin(LS.getUsername(), LS.getPassword(), session);
-		CheckSDKAuthority sdkTool = new CheckSDKAuthority(
-				(IUser) agileSession.getObject(IUser.OBJECT_TYPE, LS.getUsername()));
-		if (sdkTool.CheckAuthorityInUserRole("Administrator")) {
+		CheckSDKAuthority sdkTool;
+		try {
+			sResult = agileSession.getCurrentUser().getName().toString();
+			sdkTool = new CheckSDKAuthority((IUser) agileSession.getObject(IUser.OBJECT_TYPE, LS.getUsername()));
+
+			if (sdkTool.CheckAuthorityInUserRole("Administrator")) {
 //			System.out.println("insufficient privilege");
 //			throw new Exception(sbResult.toString());
-			return "Administrator";
-		} else if (sdkTool.CheckAuthorityInUserRole("A01. CCB Admin")) {
-			return "A01. CCB Admin";
+				return "Administrator";
+			} else if (sdkTool.CheckAuthorityInUserRole("A01. CCB Admin")) {
+				return "A01. CCB Admin";
+			}
+		} catch (APIException e) {
+			// TODO Auto-generated catch block
+			return e.getMessage();
 		}
-		return agileSession.getCurrentUser().getName().toString();
+		return sResult;
 	}
 
 	@CrossOrigin
@@ -97,9 +121,8 @@ public class WebRestController {
 		String sResult;
 		try {
 			sResult = this.Inactivate.inactivate(agileSession, username, desc);
-		} catch (SQLException e) {
-			return e.getMessage();
-		} catch (APIException e) {
+		} catch (SQLException | APIException e) {
+			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
 		return sResult;
@@ -108,7 +131,7 @@ public class WebRestController {
 	@CrossOrigin
 	@RequestMapping(value = { "/listMaintain/{listName}&{listValue}" }, method = { RequestMethod.GET })
 	public String ListMaintain(@ModelAttribute("message") String msg, @PathVariable String listName,
-			@PathVariable String listValue) throws APIException {
+			@PathVariable String listValue) {
 		String sResult;
 		try {
 			sResult = this.ListMaintain.listMaintain(agileSession, listName, listValue);
@@ -118,66 +141,74 @@ public class WebRestController {
 		}
 		return sResult;
 	}
+
 	@CrossOrigin
-	@RequestMapping(value = { "/getDropdownList" }, method = { RequestMethod.GET }, produces = {
-	"application/json" })
-	public String getDropdownList(@ModelAttribute("message") String msg) throws APIException {
+	@RequestMapping(value = { "/getDropdownList" }, method = { RequestMethod.GET }, produces = { "application/json" })
+	public String getDropdownList(@ModelAttribute("message") String msg) {
 		String sResult;
 		try {
 			sResult = this.getDropdownList.getDropdownList(agileSession);
-		} catch (Exception e) {
+		} catch (APIException | JSONException e) {
 			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
 		return sResult;
 	}
+
 	@CrossOrigin
 	@RequestMapping(value = { "/getListValue/{listName}" }, method = { RequestMethod.GET }, produces = {
-	"application/json" })
-	public String getListValue(@ModelAttribute("message") String msg, @PathVariable String listName) throws APIException {
+			"application/json" })
+	public String getListValue(@ModelAttribute("message") String msg, @PathVariable String listName) {
 		String sResult = null;
 		try {
 			sResult = this.ListValueMaintain.getListValue(agileSession, listName);
-		} catch (Exception e) {
+		} catch (APIException | JSONException e) {
 			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
 		return sResult;
 	}
+
 	@CrossOrigin
 	@RequestMapping(value = { "/getListValue/{listName}&{listValue}" }, method = { RequestMethod.POST })
-	public String postListValue(@ModelAttribute("message") String msg, @PathVariable String listName, @PathVariable String listValue) throws APIException {
+	public String postListValue(@ModelAttribute("message") String msg, @PathVariable String listName,
+			@PathVariable String listValue) {
 		String sResult = null;
 		try {
 			sResult = this.ListValueMaintain.addListValue(agileSession, listName, listValue);
-		} catch (Exception e) {
+		} catch (APIException | JSONException e) {
 			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
 		return sResult;
 	}
+
 	@CrossOrigin
 	@RequestMapping(value = { "/getListValue/{listName}&{oListValue}&{nListValue}" }, method = { RequestMethod.PUT })
-	public String putListValue(@ModelAttribute("message") String msg, @PathVariable String listName, @PathVariable String oListValue, @PathVariable String nListValue) throws APIException {
+	public String putListValue(@ModelAttribute("message") String msg, @PathVariable String listName,
+			@PathVariable String oListValue, @PathVariable String nListValue) {
 		String sResult = null;
 		try {
 			sResult = this.ListValueMaintain.updateListValue(agileSession, listName, oListValue, nListValue);
-		} catch (Exception e) {
+		} catch (APIException | JSONException e) {
 			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
 		return sResult;
 	}
+
 	@CrossOrigin
 	@RequestMapping(value = { "/getListValue/{listName}&{listValue}" }, method = { RequestMethod.DELETE })
-	public String deleteListValue(@ModelAttribute("message") String msg, @PathVariable String listName, @PathVariable String listValue) throws APIException {
+	public String deleteListValue(@ModelAttribute("message") String msg, @PathVariable String listName,
+			@PathVariable String listValue) {
 		String sResult = null;
 		try {
 			sResult = this.ListValueMaintain.deleteListValue(agileSession, listName, listValue);
-		} catch (Exception e) {
+		} catch (APIException | JSONException e) {
 			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
+		System.out.println("111 " + sResult);
 		return sResult;
 	}
 }

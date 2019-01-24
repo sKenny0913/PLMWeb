@@ -13,13 +13,13 @@ import com.qsi.agile.ConnectAgileUtil;
 @Service
 public class ProductLine {
 
-	public String add(String sPCode) {
+	public String add(String sPCode,IAgileSession agileSession1) {
 		String sResult = "";
 		try {
-			IAgileSession agileSession = ConnectAgileUtil.connect23("it_plmweb", "Plmweb123");
+			 agileSession1 = ConnectAgileUtil.connect23("it_plmweb", "Plmweb123");
 
 			// Get the Admin instance
-			IAdmin admin = agileSession.getAdminInstance();
+			IAdmin admin = agileSession1.getAdminInstance();
 			// Get the List Library
 			IListLibrary listLib = admin.getListLibrary();
 			// Get the Product Lines list

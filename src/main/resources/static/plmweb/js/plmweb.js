@@ -15,7 +15,12 @@ $(function () {
     });
     $("#btnInactivate").click(function () {
         if ($('#idForm').valid()) {
-            Inactivate();
+            if (textIsValid()) {
+                alert('please do not input "\\" or "/"')
+            }
+            else {
+                Inactivate();
+            }
         }
     });
     $("#btnListQuery").click(function () {
@@ -42,7 +47,13 @@ $(function () {
         }
     });
     if (window.location.pathname == '/pages/ListMaintain.html') {
-        getList();
+        if (typeof $.cookie('userid') !== 'undefined' && $.cookie('userid') != 'null') {
+            getList();
+        }
+        else {
+            alert('please login Agile first');
+            window.location.replace("/");
+        }
     }
 });
 $(document).on('click', '.w3-medium', function () {
@@ -84,7 +95,6 @@ function initialize() {
     $("#result").hide();
     $(".login").show();
     $("#idBtnLogout").hide();
-    $(".req").show();
     //    $(".res").hide();
     //    $(".res").show();
 }
@@ -92,11 +102,14 @@ function initialize() {
 function resultShow() {
     $("#result").show();
     $("#idSpinner").hide();
-    $('#idLoader').delay(2000).fadeOut('fast')
-    setTimeout(function () {
-        $("#idSpinner").show();
-        $("#idResult").text('Loading...');
-    }, 3000);
+    $('#idLoader').delay(2000).fadeOut(0);
+}
+
+function textIsValid() {
+    var sInput = $("#inputDesc").val();
+    var patt = new RegExp("[\\\\/]");
+    var res = patt.test(sInput);
+    return res;
 }
 //----------------------compare js----------------------------
 function Compare() {
@@ -183,6 +196,7 @@ function Inactivate() {
 }
 //--------------------list maintain js --------------------
 function getList() {
+    $(".req").show();
     var url = serverAddress + "getDropdownList";
     var urlFinal = url;
     w3.getHttpObject(urlFinal, function (res) {
@@ -207,6 +221,7 @@ function getList() {
 }
 
 function getListValue() {
+    $("#result").hide();
     var url = serverAddress + "getListValue/";
     var sListName = $("#dropdownList").val();
     var urlFinal = url + sListName;
@@ -231,6 +246,7 @@ function getListValue() {
 
 function addListValue() {
     $("#result").hide();
+    Loading();
     var url = serverAddress + "getListValue/";
     var sListName = $("#dropdownList").val();
     var sListValue = $("#listValue").val();
@@ -243,14 +259,13 @@ function addListValue() {
         , success: function (res) {
             $("#idResult").text('success: ' + res);
             getListValue()
+            resultShow();
         }
         , error: function (res) {
             $("#idResult").text('failed: ' + res);
+            resultShow();
         }
-    }).always(function () {
-        //        alert("finished");
-        resultShow();
-    });
+    })
 }
 
 function updateListValue() {
@@ -265,6 +280,7 @@ function updateListValue() {
     //    console.log(urlFinal);
     //    $("#idConfirm").show();
     $("#btnYes").click(function () {
+        Loading();
         $("#idLoader").show();
         $("#idConfirm").hide();
         $.ajax({
@@ -274,15 +290,14 @@ function updateListValue() {
                 $("#idResult").text('success: ' + res);
                 getListValue()
                 oListValue = null
+                resultShow();
             }
             , error: function (res) {
                 $("#idResult").text('failed: ' + res);
                 oListValue = null
+                resultShow();
             }
-        }).always(function () {
-            //        alert("finished");
-            resultShow();
-        });
+        })
     });
 }
 
@@ -292,12 +307,13 @@ function deleteListValue() {
     var sListName = $("#dropdownList").val();
     var sListValue = $("#listValue").val();
     var urlFinal = url + sListName + '&' + sListValue;
-    //    console.log(urlFinal);
+    console.log(urlFinal);
     $("#idConfirm").show();
     $("#idConfirmText").text('are you sure delete ' + sListValue + '?');
     //    console.log(urlFinal);
     //    $("#idConfirm").show();
     $("#btnYes").click(function () {
+        Loading();
         $("#idLoader").show();
         $("#idConfirm").hide();
         $.ajax({
@@ -306,13 +322,12 @@ function deleteListValue() {
             , success: function (res) {
                 $("#idResult").text('success: ' + res);
                 getListValue()
+                resultShow();
             }
             , error: function (res) {
                 $("#idResult").text('failed: ' + res);
+                resultShow();
             }
-        }).always(function () {
-            //        alert("finished");
-            resultShow();
-        });
+        })
     });
 }
