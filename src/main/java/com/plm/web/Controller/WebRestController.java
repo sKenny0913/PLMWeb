@@ -56,7 +56,7 @@ public class WebRestController {
 
 
 	@PostConstruct
-	public void foo() {
+	public void Initial() {
 		try {
 			agileSession1 = ConnectAgileUtil.connect23("it_plmweb", "Plmweb123");
 		} catch (APIException e) {
