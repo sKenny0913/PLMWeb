@@ -1,7 +1,7 @@
 var userid;
 var password;
 var role;
-$(document).ready(function () {
+$(function () {
     $("#login-placeholder").load("../pages/Login.html", function () {
         initialize();
         $("#idBtnLogin").click(function () {
@@ -19,6 +19,8 @@ $(document).ready(function () {
             window.location.replace("/");
             //            }, 5000);
         });
+    });
+    $("#nav-placeholder").load("../pages/nav.html", function () {
         if (typeof $.cookie('userid') !== 'undefined' && $.cookie('userid') != 'null') {
             //            console.log($.cookie('userid') + ' ' + $.cookie('password'));
             //            console.log(typeof $.cookie('userid'));
@@ -29,6 +31,8 @@ $(document).ready(function () {
             reLogin();
         }
     });
+    $("#loading-placeholder").load("../pages/loading.html", function () {});
+    $("#confirm-placeholder").load("../pages/confirm.html", function () {});
     //    $("#report-placeholder").load("Report");
 });
 
@@ -39,17 +43,18 @@ function doLogin() {
         username: userid
         , password: password
     }, function (res) {
+        //        console.log(res);
         switch (res) {
         case "Administrator":
             //            console.log("Admin");
             $.cookie('role', 'Administrator');
-            $(".admin").show();
-            $(".dcc").show();
+            $('.admin').css('display', 'block');
+            $('.dcc').css('display', 'block');
             break;
         case "A01. CCB Admin":
             //            console.log("dcc");
             $.cookie('role', 'A01. CCB Admin');
-            $(".dcc").show();
+            $('.dcc').css('display', 'block');
             break;
         default:
             //            console.log("default");
@@ -57,13 +62,14 @@ function doLogin() {
     }).done(function (res) {
         document.getElementById('idSpanLoginResult').innerHTML = "welcome " + res;
         document.getElementById('idResult').innerHTML = "welcome " + res;
-        document.getElementById('idPuserName').innerHTML = userid;
-        document.getElementById('idPuserName1').innerHTML = userid;
+        $('#idPuserName').text(userid);
+        $('#idPuserName1').text(userid);
         $(".login").hide();
         $("#idBtnLogout").show();
         $('#idDivLogin').hide();
         $.cookie('userid', userid);
         $.cookie('password', password);
+        window.location.reload();
     }).fail(function () {
         document.getElementById('idSpanLoginResult').innerHTML = "incorrect user or password";
         document.getElementById('idResult').innerHTML = "incorrect user or password";
@@ -78,25 +84,25 @@ function doLogin() {
 }
 
 function reLogin() {
-    document.getElementById('idPuserName').innerHTML = userid;
-    document.getElementById('idPuserName1').innerHTML = userid;
     $(".login").hide();
     $("#idBtnLogout").show();
     $('#idDivLogin').hide();
-    //    console.log(role);
     switch (role) {
     case "Administrator":
-        //        console.log("Admin");
-        $(".admin").show();
-        $(".dcc").show();
+        $('.admin').css('display', 'block');
+        $('.dcc').css('display', 'block');
+        //        console.log('admin');
         break;
     case "A01. CCB Admin":
-        //        console.log("dcc");
-        $(".dcc").show();
+        //        console.log('dcc');
+        $('.dcc').css('display', 'block');
         break;
     default:
-        //            console.log("default");
     }
+    $('#idPuserName').text(userid);
+    $('#idPuserName1').text(userid);
+    //    document.getElementById('idPuserName').innerHTML = userid;
+    //    document.getElementById('idPuserName1').innerHTML = userid;
 }
 
 function doLogout() {
@@ -104,4 +110,5 @@ function doLogout() {
     $.cookie("userid", null);
     $.cookie("password", null);
     $.cookie("role", null);
+    window.location.reload();
 }

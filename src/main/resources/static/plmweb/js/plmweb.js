@@ -5,9 +5,6 @@ var oListValue = null;
 //----------------------main function---------------------
 $(function () {
     initialize();
-    $("#nav-placeholder").load("../pages/nav.html", function () {});
-    $("#loading-placeholder").load("../pages/loading.html", function () {});
-    $("#confirm-placeholder").load("../pages/confirm.html", function () {});
     $("#btnCompare").click(function () {
         if ($('#idForm').valid()) {
             Compare();
@@ -64,6 +61,31 @@ $(document).on('click', '.w3-medium', function () {
     //    w3.getHttpObject(url, displayRDetail);
 });
 //----------------------public js----------------------------
+function selectElementContents(el) {
+    var body = document.body
+        , range, sel;
+    if (document.createRange && window.getSelection) {
+        range = document.createRange();
+        sel = window.getSelection();
+        sel.removeAllRanges();
+        try {
+            range.selectNodeContents(el);
+            sel.addRange(range);
+        }
+        catch (e) {
+            range.selectNode(el);
+            sel.addRange(range);
+        }
+    }
+    else if (body.createTextRange) {
+        range = body.createTextRange();
+        range.moveToElementText(el);
+        range.select();
+    }
+    document.execCommand("Copy");
+    alert('table copied.')
+}
+
 function w3_open() {
     document.getElementById("main").style.marginLeft = "20%";
     document.getElementById("mySidebar").style.width = "20%";
@@ -90,8 +112,8 @@ function Loading() {
 
 function initialize() {
     //    $("#idRTable").hide();
-    $(".admin").hide();
-    $(".dcc").hide();
+    //    $(".admin").hide();
+    //    $(".dcc").hide();
     $("#result").hide();
     $(".login").show();
     $("#idBtnLogout").hide();
@@ -179,7 +201,7 @@ function Inactivate() {
     var sCol2 = $('#idForm').find("input[name='col2']").val();
     //    var urlFinalBOM = urlBOM + sPN + '&' + sCPN;
     var urlFinal = url + sCol1 + '&' + sCol2;
-    //    console.log(urlFinalBOM);
+    console.log(urlFinal);
     //        console.log(urlFinalCKDID);
     Loading();
     $.get(urlFinal, function (res) {}).done(function (res) {

@@ -51,15 +51,15 @@ public class WebApplicationTests {
 	public void contextLoads() throws Exception {
 		String uri = "/PLMWeb/productLine?productCode=123";
 	
-		try{
-			MvcResult result = mvc.perform(MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON)).andReturn();
+//		try{
+//			MvcResult result = mvc.perform(MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON)).andReturn();
 //			MvcResult result = mvc.perform(MockMvcRequestBuilders.post(uri).content(objectMapper.writeValueAsString(memberaccount)).accept(MediaType.APPLICATION_JSON)).andReturn();
-			int status = result.getResponse().getStatus();
-			Assert.assertEquals("錯誤",200,status);
-		}
-		catch(Exception ex){
-			ex.printStackTrace();
-		}
+//			int status = result.getResponse().getStatus();
+//			Assert.assertEquals("錯誤",200,status);
+//		}
+//		catch(Exception ex){
+//			ex.printStackTrace();
+//		}
 	}
 	
 	@Test
