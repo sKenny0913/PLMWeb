@@ -32,7 +32,8 @@ $(function () {
         }
     });
     $("#loading-placeholder").load("../pages/loading.html", function () {});
-    $("#confirm-placeholder").load("../pages/confirm.html", function () {});
+    $("#confirmUpdate-placeholder").load("../pages/confirmUpdate.html", function () {});
+    $("#confirmDelete-placeholder").load("../pages/confirmDelete.html", function () {});
     //    $("#report-placeholder").load("Report");
 });
 

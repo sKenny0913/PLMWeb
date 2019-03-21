@@ -29,10 +29,15 @@ public class WebController
   {
 	  return "pages/loading";
   }
-  @GetMapping({"/pages/confirm.html"})
-  public String confirm()
+  @GetMapping({"/pages/confirmUpdate.html"})
+  public String confirmUpdate()
   {
-	  return "pages/confirm";
+	  return "pages/confirmUpdate";
+  }
+  @GetMapping({"/pages/confirmDelete.html"})
+  public String confirmDelete()
+  {
+	  return "pages/confirmDelete";
   }
   @GetMapping({"/pages/Login.html"})
   public String Login()
