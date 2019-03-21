@@ -17,7 +17,6 @@ public class Inactivate {
 
 	public String inactivate(IAgileSession agileSession, String sUsername, String sDesc)
 			throws SQLException, APIException {
-		// TODO Auto-generated method stub
 		String sResult = "";
 		System.out.println("Connecting 24 DB...");
 		Connection conn = ConnectionUtil.getConnectionUtil().getProductConnection();
@@ -32,32 +31,28 @@ public class Inactivate {
 			return sResult;
 		}
 		ResultSet rsUser;
-		rsUser = conn.prepareStatement(strStatement).executeQuery();
+		rsUser = conn.prepareStatement(strStatement).executeQuery();//get user id from PLM DB
 		if (!rsUser.next()) {
 			sResult = "user not exist";
 			return sResult;
 		}
 
-//				while (rsUser.next()) {
-		IUser user = (IUser) agileSession.getObject(IUser.OBJECT_TYPE, rsUser.getString("LOGINID"));
-		if (user.getValue(UserConstants.ATT_GENERAL_INFO_STATUS).toString().equals("Active")) {
+		IUser user = (IUser) agileSession.getObject(IUser.OBJECT_TYPE, rsUser.getString("LOGINID"));//get IUser
+		agileSession.disableAllWarnings();
+		if (user.getValue(UserConstants.ATT_GENERAL_INFO_STATUS).toString().equals("Active")) {//inactivate user
 			user.setValue(UserConstants.ATT_GENERAL_INFO_STATUS, "Inactive");
 			sResult = "user " + user.getName() + " has been inactivated";
-//						System.out.println(user.getName() + " has been inactivated.");
-			if (user.getValue(UserConstants.ATT_PAGE_TWO_MULTITEXT10).toString().equals(null)) {
+			if (user.getValue(UserConstants.ATT_PAGE_TWO_MULTITEXT10).toString().equals(null)) {//update user description
 				user.setValue(UserConstants.ATT_PAGE_TWO_MULTITEXT10, sDesc);
 			} else {
 				sb.append(user.getValue(UserConstants.ATT_PAGE_TWO_MULTITEXT10));
-//							System.out.println(sb);
 				sb.append("\n" + sDesc);
 				user.setValue(UserConstants.ATT_PAGE_TWO_MULTITEXT10, sb.toString());
-//							System.out.println(sb);
 			}
-//						System.out.println(user.getName() + " is now Inactive.");
 		} else {
 			sResult = user.getName() + " had been inactive";
 		}
-//				}
+		agileSession.enableAllWarnings();
 		return sResult;
 	}
 

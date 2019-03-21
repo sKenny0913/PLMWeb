@@ -16,22 +16,17 @@ import com.agile.ws.schema.common.v1.axis.ResponseStatusCode;
 import com.agile.ws.schema.common.v1.axis.SelectionType;
 import com.agile.ws.service.business.v1.axis.BusinessObjectServiceLocator;
 import com.agile.ws.service.business.v1.axis.BusinessObject_BindingStub;
-import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import javax.xml.namespace.QName;
 import org.apache.axis.AxisFault;
-import org.apache.axis.client.Stub;
 import org.apache.axis.message.MessageElement;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Service;
-import org.w3c.dom.Node;
 
 @Service
 public class CompareService {
@@ -42,13 +37,13 @@ public class CompareService {
 	public static String serviceName = "BusinessObject";
 	public static String SERVER_URL = SERVER_INF + "/" + serviceName;
 	public static BusinessObject_BindingStub agileStub;
-	public static Map<String, String> m1 = new HashMap();
-	public static Map<String, String> m2 = new HashMap();
-	public static Map<String, String> m1q = new HashMap();
-	public static Map<String, String> m2q = new HashMap();
-	public static Map<String, String> md = new HashMap();
+	public static Map<String, String> m1 = new HashMap<String, String>();
+	public static Map<String, String> m2 = new HashMap<String, String>();
+	public static Map<String, String> m1q = new HashMap<String, String>();
+	public static Map<String, String> m2q = new HashMap<String, String>();
+	public static Map<String, String> md = new HashMap<String, String>();
 
-	public void setupServerLogin() throws Exception {
+	public void setupServerLogin() throws Exception {// get agileStub(PLM WebService) from PLM AP, same as agileSession
 		BusinessObjectServiceLocator locator = new BusinessObjectServiceLocator();
 
 		agileStub = (BusinessObject_BindingStub) locator.getBusinessObject(new URL(SERVER_URL));
@@ -57,7 +52,7 @@ public class CompareService {
 		agileStub.setPassword(PASSWORD);
 	}
 
-	public String getMessageElementValue(MessageElement element) {
+	public String getMessageElementValue(MessageElement element) {//get PLM text or list value
 		if (element.getFirstChild() != null) {
 			if (element.getType().getLocalPart().equals("AgileListEntryType")) {
 				AgileListEntryType list = (AgileListEntryType) element.getObjectValue();
@@ -117,32 +112,31 @@ public class CompareService {
 								String sRefDes = null;
 								String sQty = null;
 								String sitemDescription = null;
-								List<String> listValue = new ArrayList();
 								if (rows != null) {
 									for (int k = 0; k < rows.length; k++) {
 										messages = rows[k].get_any();
 										if (messages != null) {
 											for (int jj = 0; jj < messages.length; jj++) {
 												if (messages[jj].getTagName().equals(":itemNumber")) {
-													sItemNumber = getMessageElementValue(messages[jj]);
+													sItemNumber = getMessageElementValue(messages[jj]);//get item number
 												}
 												if (messages[jj].getTagName().equals(":refDes")) {
-													sRefDes = getMessageElementValue(messages[jj]);
-													if (bComparePN.booleanValue()) {
+													sRefDes = getMessageElementValue(messages[jj]);//get CKD-ID
+													if (bComparePN.booleanValue()) {//if boolean = false, it is first Item
 														m1.put(sItemNumber, sRefDes);
 													} else {
 														m2.put(sItemNumber, sRefDes);
 													}
 												}
-												if (messages[jj].getTagName().equals(":qty")) {
+												if (messages[jj].getTagName().equals(":qty")) {//get Qty
 													sQty = getMessageElementValue(messages[jj]);
-													if (bComparePN.booleanValue()) {
+													if (bComparePN.booleanValue()) {//if boolean = true, it is second Item
 														m1q.put(sItemNumber, sQty);
 													} else {
 														m2q.put(sItemNumber, sQty);
 													}
 												}
-												if (messages[jj].getTagName().equals(":itemDescription")) {
+												if (messages[jj].getTagName().equals(":itemDescription")) {//get item description
 													sitemDescription = getMessageElementValue(messages[jj]);
 													md.put(sItemNumber, sitemDescription);
 												}
@@ -173,7 +167,7 @@ public class CompareService {
 		System.out.println("\n------------------------------------------------------------------------");
 		System.out.println("Executing webservice sample: ");
 
-		setupServerLogin();
+		setupServerLogin();// get agile session
 
 		System.out.println("Top Level PartNumber: " + partNumber);
 		getBOM(partNumber, Boolean.valueOf(false));
@@ -183,7 +177,7 @@ public class CompareService {
 
 		JSONArray jArray = new JSONArray();
 		for (Map.Entry<String, String> entry1 : m1.entrySet()) {
-			if ((m2.get(entry1.getKey()) == null) || (m2.get(entry1.getKey()) == "")) {
+			if ((m2.get(entry1.getKey()) == null) || (m2.get(entry1.getKey()) == "")) {// if BOM1 item not exist in BOM2
 				JSONObject jObjNew = new JSONObject();
 				jObjNew.put("PN", "");
 				jObjNew.put("CPN", entry1.getKey());
@@ -191,7 +185,7 @@ public class CompareService {
 			}
 		}
 		for (Map.Entry<String, String> entry1 : m2.entrySet()) {
-			if ((m1.get(entry1.getKey()) == null) || (m1.get(entry1.getKey()) == "")) {
+			if ((m1.get(entry1.getKey()) == null) || (m1.get(entry1.getKey()) == "")) {// if BOM2 item not exist in BOM1
 				JSONObject jObjNew = new JSONObject();
 				jObjNew.put("PN", entry1.getKey());
 				jObjNew.put("CPN", "");
@@ -220,22 +214,20 @@ public class CompareService {
 
 		JSONArray jArray1 = new JSONArray();
 		for (Map.Entry<String, String> entry1 : m1.entrySet()) {
-			if (!m2.containsKey(entry1.getKey())) { // if map 2 does not contain part number in map 1
+			if (!m2.containsKey(entry1.getKey())) { //get CKD-ID for BOM2 part not exist in BOM1, if BOM 2 does not contain part number in BOM 1
 				JSONObject jObjNew = new JSONObject();
 				jObjNew.put("PN", "");
 				jObjNew.put("PN_QTY", "");
 				jObjNew.put("PN_CKDID", "");
 				jObjNew.put("CPN", entry1.getKey());
 				jObjNew.put("CPN_QTY", m1q.get(entry1.getKey()));
-//				System.out.println("forloop 1 : " + entry1.getKey()); // TODO
-				if (m1.get(entry1.getKey()) != null) { // if map 1 part has CKDID
-					ArrayList<String> m1_CKDID_BOM = new ArrayList();
+				if (m1.get(entry1.getKey()) != null) { // if BOM 1 part has CKDID
+					ArrayList<String> m1_CKDID_BOM = new ArrayList<String>();
 					if (((String) m1.get(entry1.getKey())).contains(",")) {
 
-						String[] v1 = ((String) m1.get(entry1.getKey())).split(",");
-//						System.out.println("forloop 2-1 : " + v1);
+						String[] v1 = ((String) m1.get(entry1.getKey())).split(",");//split CKDID to Array by comma,
 
-						for (int i = 0; i < v1.length; i++) {
+						for (int i = 0; i < v1.length; i++) {//depart CKDID to a sequence, e.g. A01-A03 = A01 A02 A03
 							if (v1[i].contains("-")) {
 								String[] v1c = v1[i].split("-");
 								String prefix_CKDID = v1c[0].replaceAll("[^A-Za-z]+", "");
@@ -243,17 +235,10 @@ public class CompareService {
 								String sLast_number_CKDID = v1c[1].replaceAll("[^\\d.]", "");
 								int iFirst_number_CKDID = Integer.parseInt(sFirst_number_CKDID);
 								int iLast_number_CKDID = Integer.parseInt(sLast_number_CKDID);
-//								System.out.println("v1c[0] " + v1c[0]);//TODO
-//								System.out.println("prefix " + prefix_CKDID);//TODO
-//								System.out.println("first number: " + sFirst_number_CKDID);//TODO
-//								System.out.println("v1c[1] " + v1c[1]);//TODO
-//								System.out.println("last number: " + sLast_number_CKDID);//TODO
 								m1_CKDID_BOM.add(prefix_CKDID + sFirst_number_CKDID);
 								while (iFirst_number_CKDID != iLast_number_CKDID) {
-//									System.out.println("forloop 2-2-4 : " + entry1.getKey()); //TODO
 									iFirst_number_CKDID++;
 									m1_CKDID_BOM.add(prefix_CKDID + iFirst_number_CKDID);
-//									System.out.println("2: " + m2_CKDID_BOM);
 								}
 							} else {
 								m1_CKDID_BOM.add(v1[i]);
@@ -270,20 +255,17 @@ public class CompareService {
 				jArray1.put(jObjNew);
 			}
 		}
-		for (Map.Entry<String, String> entry1 : m2.entrySet()) {
-//			System.out.println("forloop 2 : " + entry1.getKey()); // TODO
+		for (Map.Entry<String, String> entry1 : m2.entrySet()) {//get CKD-ID for BOM1 part not exist in BOM1, if BOM 1 does not contain part number in BOM 2
 			if (!m1.containsKey(entry1.getKey())) {
 				JSONObject jObjNew = new JSONObject();
 				jObjNew.put("PN", entry1.getKey());
 				jObjNew.put("PN_QTY", m2q.get(entry1.getKey()));
 				if (m2.get(entry1.getKey()) != null) {
-					ArrayList<String> m2_CKDID_BOM = new ArrayList();
+					ArrayList<String> m2_CKDID_BOM = new ArrayList<String>();
 
-//					System.out.println("forloop 2 : " + m2.get(entry1.getKey()));
 					if (((String) m2.get(entry1.getKey())).contains(",")) {
 
 						String[] v1 = ((String) m2.get(entry1.getKey())).split(",");
-//						System.out.println("forloop 2-1 : " + v1);
 
 						for (int i = 0; i < v1.length; i++) {
 							if (v1[i].contains("-")) {
@@ -293,17 +275,10 @@ public class CompareService {
 								String sLast_number_CKDID = v1c[1].replaceAll("[^\\d.]", "");
 								int iFirst_number_CKDID = Integer.parseInt(sFirst_number_CKDID);
 								int iLast_number_CKDID = Integer.parseInt(sLast_number_CKDID);
-//								System.out.println("v1c[0] " + v1c[0]);//TODO
-//								System.out.println("prefix " + prefix_CKDID);//TODO
-//								System.out.println("first number: " + sFirst_number_CKDID);//TODO
-//								System.out.println("v1c[1] " + v1c[1]);//TODO
-//								System.out.println("last number: " + sLast_number_CKDID);//TODO
 								m2_CKDID_BOM.add(prefix_CKDID + sFirst_number_CKDID);
 								while (iFirst_number_CKDID != iLast_number_CKDID) {
-//									System.out.println("forloop 2-2-4 : " + entry1.getKey()); //TODO
 									iFirst_number_CKDID++;
 									m2_CKDID_BOM.add(prefix_CKDID + iFirst_number_CKDID);
-//									System.out.println("2: " + m2_CKDID_BOM);
 								}
 							} else {
 								m2_CKDID_BOM.add(v1[i]);
@@ -324,7 +299,7 @@ public class CompareService {
 				jArray1.put(jObjNew);
 			}
 		}
-		for (Map.Entry<String, String> entry1 : m1.entrySet()) {
+		for (Map.Entry<String, String> entry1 : m1.entrySet()) {// compare CKD-ID of same part, which both BOM1 and BOM2 has same part
 			String m1value = entry1.getValue() == null ? "" : (String) entry1.getValue();
 			String m2value = m2.get(entry1.getKey()) == null ? "" : (String) m2.get(entry1.getKey());
 			if ((!m1value.equals("")) && (!m2value.equals("")) && (!m1value.equals(m2value))) {
@@ -332,7 +307,7 @@ public class CompareService {
 				String[] v2 = m2value.split(",");
 
 				List<String> m1_list = Arrays.asList(m1value.split(","));
-				ArrayList<String> m1_CKDID = new ArrayList();
+				ArrayList<String> m1_CKDID = new ArrayList<String>();
 				m1_CKDID.addAll(m1_list);
 				for (int i = 0; i < v1.length; i++) {
 					if (v1[i].contains("-")) {
@@ -350,9 +325,8 @@ public class CompareService {
 						}
 					}
 				}
-//				System.out.println("forloop 3 : " + m1_CKDID); // TODO
 				List<String> m2_list = Arrays.asList(m2value.split(","));
-				ArrayList<String> m2_CKDID = new ArrayList();
+				ArrayList<String> m2_CKDID = new ArrayList<String>();
 				m2_CKDID.addAll(m2_list);
 				for (int i = 0; i < v2.length; i++) {
 					if (v2[i].contains("-")) {
@@ -370,10 +344,9 @@ public class CompareService {
 						}
 					}
 				}
-//				System.out.println("forloop 4 : " + m2_CKDID); // TODO
-				ArrayList<String> m1_result = new ArrayList(m1_CKDID);
+				ArrayList<String> m1_result = new ArrayList<String>(m1_CKDID);
 				m1_result.removeAll(m2_CKDID);
-				ArrayList<String> m2_result = new ArrayList(m2_CKDID);
+				ArrayList<String> m2_result = new ArrayList<String>(m2_CKDID);
 				m2_result.removeAll(m1_CKDID);
 				if ((!m1_result.isEmpty()) || (!m2_result.isEmpty())) {
 					JSONObject jObjNew = new JSONObject();
@@ -386,7 +359,6 @@ public class CompareService {
 					jObjNew.put("CPN_Desc", md.get(entry1.getKey()));
 					jArray1.put(jObjNew);
 				}
-//				System.out.println("Completed"); //TODO
 			}
 		}
 		JSONObject jObjDevice1 = new JSONObject();

@@ -22,20 +22,16 @@ public class ListValueMaintain {
 			sResult = "please login first";
 			return sResult;
 		}
-		// Get the Admin instance
-		IAdmin admin = agileSession.getAdminInstance();
-		// Get the List Library
-		IListLibrary listLib = admin.getListLibrary();
-		// Get the Product Lines list
-		IAdminList iAdminList = listLib.getAdminList(listName);
-		// Add values to the list
-		IAgileList iAgileList = iAdminList.getValues();
-		Object[] children = iAgileList.getChildren();
+		
+		IAdmin admin = agileSession.getAdminInstance();// Get the Admin instance
+		IListLibrary listLib = admin.getListLibrary();	// Get the List Library
+		IAdminList iAdminList = listLib.getAdminList(listName);	// Get the Product Lines list
+		IAgileList iAgileList = iAdminList.getValues();	// Add values to the list
+		Object[] children = iAgileList.getChildren();//get all list values
 		JSONArray ja = new JSONArray();
-		for (Object obj : children) {
+		for (Object obj : children) {//put in JSON
 
 			IAgileList listChildren = (IAgileList) obj;
-//				System.out.println(list.getName());
 			JSONObject jo = new JSONObject();
 			jo.put("Name", listChildren.getValue());
 			if (listChildren.isObsolete() == false) {
@@ -43,9 +39,7 @@ public class ListValueMaintain {
 			} else {
 				jo.put("Active", "Inactive");
 			}
-
 			ja.put(jo);
-//				System.out.println(ja);
 		}
 		JSONObject joR = new JSONObject();
 		joR.put("joR", ja);
@@ -62,17 +56,13 @@ public class ListValueMaintain {
 			sResult = "please login first";
 			return sResult;
 		}
-		// Get the Admin instance
 		IAdmin admin = agileSession.getAdminInstance();
-		// Get the List Library
 		IListLibrary listLib = admin.getListLibrary();
-		// Get the Product Lines list
 		IAdminList iAdminList = listLib.getAdminList(listName);
-		// Add values to the list
 		IAgileList iAgileList = iAdminList.getValues();
 		Object[] children = iAgileList.getChildren();
 
-		for (Object obj : children) {
+		for (Object obj : children) {//check if value already exist
 			IAgileList listChildren = (IAgileList) obj;
 			if (listChildren.getValue().equals(listValue)) {
 				sResult = listValue + " already exist";
@@ -80,7 +70,7 @@ public class ListValueMaintain {
 			}
 		}
 
-		iAgileList.addChild(listValue);
+		iAgileList.addChild(listValue);//add list value
 		iAdminList.setValues(iAgileList);
 		sResult = listValue + " added";
 
@@ -96,16 +86,12 @@ public class ListValueMaintain {
 			sResult = "please login first";
 			return sResult;
 		}
-		// Get the Admin instance
 		IAdmin admin = agileSession.getAdminInstance();
-		// Get the List Library
 		IListLibrary listLib = admin.getListLibrary();
-		// Get the Product Lines list
 		IAdminList iAdminList = listLib.getAdminList(listName);
-		// Add values to the list
 		IAgileList iAgileList = iAdminList.getValues();
 		IAgileList children = (IAgileList) iAgileList.getChild(oListValue);
-		children.setValue(nListValue);
+		children.setValue(nListValue);//update list value
 		iAdminList.setValues(iAgileList);
 		sResult = nListValue + " updated";
 
@@ -121,15 +107,11 @@ public class ListValueMaintain {
 			sResult = "please login first";
 			return sResult;
 		}
-		// Get the Admin instance
 		IAdmin admin = agileSession.getAdminInstance();
-		// Get the List Library
 		IListLibrary listLib = admin.getListLibrary();
-		// Get the Product Lines list
 		IAdminList iAdminList = listLib.getAdminList(listName);
-		// Add values to the list
 		IAgileList iAgileList = iAdminList.getValues();
-		iAgileList.removeChild(listValue);
+		iAgileList.removeChild(listValue);// delete list value
 		iAdminList.setValues(iAgileList);
 		sResult = listValue + " deleted";
 

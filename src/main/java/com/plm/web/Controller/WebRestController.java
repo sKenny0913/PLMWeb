@@ -10,7 +10,6 @@ import com.qsi.agile.CheckSDKAuthority;
 import com.qsi.agile.ConnectAgileUtil;
 import com.plm.web.Service.Login;
 import com.plm.web.Service.Inactivate;
-import com.plm.web.Service.ListMaintain;
 import com.plm.web.Service.getDropdownList;
 import com.plm.web.Service.ListValueMaintain;
 
@@ -48,15 +47,13 @@ public class WebRestController {
 	@Autowired
 	Inactivate Inactivate;
 	@Autowired
-	ListMaintain ListMaintain;
-	@Autowired
 	getDropdownList getDropdownList;
 	@Autowired
 	ListValueMaintain ListValueMaintain;
 
 
 	@PostConstruct
-	public void Initial() {
+	public void Initial() {//build connection with PLM when deployment for EF-PLM add product line use
 		try {
 			agileSession1 = ConnectAgileUtil.connect23("it_plmweb", "Plmweb123");
 		} catch (APIException e) {
@@ -108,7 +105,6 @@ public class WebRestController {
 				return "A01. CCB Admin";
 			}
 		} catch (APIException e) {
-			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
 		return sResult;
@@ -122,25 +118,10 @@ public class WebRestController {
 		try {
 			sResult = this.Inactivate.inactivate(agileSession, username, desc);
 		} catch (SQLException | APIException e) {
-			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
 		return sResult;
 	}
-
-//	@CrossOrigin
-//	@RequestMapping(value = { "/listMaintain/{listName}&{listValue}" }, method = { RequestMethod.GET })
-//	public String ListMaintain(@ModelAttribute("message") String msg, @PathVariable String listName,
-//			@PathVariable String listValue) {
-//		String sResult;
-//		try {
-//			sResult = this.ListMaintain.listMaintain(agileSession, listName, listValue);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			return e.getMessage();
-//		}
-//		return sResult;
-//	}
 
 	@CrossOrigin
 	@RequestMapping(value = { "/getDropdownList" }, method = { RequestMethod.GET }, produces = { "application/json" })
@@ -149,7 +130,6 @@ public class WebRestController {
 		try {
 			sResult = this.getDropdownList.getDropdownList(agileSession);
 		} catch (APIException | JSONException e) {
-			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
 		return sResult;
@@ -163,7 +143,6 @@ public class WebRestController {
 		try {
 			sResult = this.ListValueMaintain.getListValue(agileSession, listName);
 		} catch (APIException | JSONException e) {
-			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
 		return sResult;
@@ -177,7 +156,6 @@ public class WebRestController {
 		try {
 			sResult = this.ListValueMaintain.addListValue(agileSession, listName, listValue);
 		} catch (APIException | JSONException e) {
-			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
 		return sResult;
@@ -191,7 +169,6 @@ public class WebRestController {
 		try {
 			sResult = this.ListValueMaintain.updateListValue(agileSession, listName, oListValue, nListValue);
 		} catch (APIException | JSONException e) {
-			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
 		return sResult;
@@ -205,7 +182,6 @@ public class WebRestController {
 		try {
 			sResult = this.ListValueMaintain.deleteListValue(agileSession, listName, listValue);
 		} catch (APIException | JSONException e) {
-			// TODO Auto-generated catch block
 			return e.getMessage();
 		}
 		System.out.println("111 " + sResult);

@@ -16,29 +16,23 @@ public class ProductLine {
 	public String add(String sPCode,IAgileSession agileSession1) {
 		String sResult = "";
 		try {
-			 agileSession1 = ConnectAgileUtil.connect23("it_plmweb", "Plmweb123");
-
-			// Get the Admin instance
 			IAdmin admin = agileSession1.getAdminInstance();
-			// Get the List Library
 			IListLibrary listLib = admin.getListLibrary();
-			// Get the Product Lines list
 			IAdminList listProdLineforChange = listLib.getAdminList("Product Line");
 			IAdminList listProdLineforItem = listLib.getAdminList("Product_Line");
-			// Add values to the list
 			IAgileList listValuesforChange = listProdLineforChange.getValues();
 			Object[] children1 = listValuesforChange.getChildren();
 			IAgileList listValuesforItem = listProdLineforItem.getValues();
 			Object[] children2 = listValuesforItem.getChildren();
 			
-			for (int j = 0; j < children1.length; j++) { // check if value exists
+			for (int j = 0; j < children1.length; j++) { // check if productline value exists
 				IAgileList listChildren = (IAgileList) children1[j];
 				if (listChildren.getValue().equals(sPCode)) {
 					sResult = "N";
 					throw new Exception(sPCode + " has already exist.");
 				}
 			}
-			for (int j = 0; j < children2.length; j++) { // check if value exists
+			for (int j = 0; j < children2.length; j++) { // check if productline value exists
 				IAgileList listChildren = (IAgileList) children2[j];
 				if (listChildren.getValue().equals(sPCode)) {
 					sResult = "N";
@@ -46,10 +40,10 @@ public class ProductLine {
 				}
 			}
 			
-			listValuesforItem.addChild(sPCode);
-			listProdLineforItem.setValues(listValuesforItem);
-			listValuesforChange.addChild(sPCode);
-			listProdLineforChange.setValues(listValuesforChange);
+			listValuesforItem.addChild(sPCode);//add productline in list
+			listProdLineforItem.setValues(listValuesforItem);//save list
+			listValuesforChange.addChild(sPCode);//add productline in another list (there are two product line list for item and changes)
+			listProdLineforChange.setValues(listValuesforChange);//save list
 			sResult = "Y";
 
 		} catch (APIException e) {

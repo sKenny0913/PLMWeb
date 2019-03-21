@@ -2,63 +2,48 @@ var userid;
 var password;
 var role;
 $(function () {
-    $("#login-placeholder").load("../pages/Login.html", function () {
-        //        initialize();
+    $("#login-placeholder").load("../pages/Login.html", function () { //load html page in specific div
         $("#idBtnLogin").click(function () {
             userid = $('#userid').val();
             password = $('#pwd').val();
-            //            alert(userid + ' ' + password);
             $(".loading").show();
             doLogin();
         });
         $("#idBtnLogout").click(function () {
             doLogout();
-            //            initialize();
-            //            setTimeout(location.reload.bind(location), 2000);
-            //            setTimeout(function () {
-            window.location.replace("/");
-            //            }, 5000);
+            window.location.replace("/"); //redirect to home page
         });
     });
     $("#nav-placeholder").load("../pages/nav.html", function () {
-        if (typeof $.cookie('userid') !== 'undefined' && $.cookie('userid') != 'null') {
-            //            console.log($.cookie('userid') + ' ' + $.cookie('password'));
-            //            console.log(typeof $.cookie('userid'));
+        if (typeof $.cookie('userid') !== 'undefined' && $.cookie('userid') != 'null') { //check if user already logged in
             userid = $.cookie('userid');
             password = $.cookie('password');
             role = $.cookie('role');
-            //            $(".loading").show();
             reLogin();
         }
     });
     $("#loading-placeholder").load("../pages/loading.html", function () {});
     $("#confirmUpdate-placeholder").load("../pages/confirmUpdate.html", function () {});
     $("#confirmDelete-placeholder").load("../pages/confirmDelete.html", function () {});
-    //    $("#report-placeholder").load("Report");
 });
 
 function doLogin() {
     document.getElementById('idResult').innerHTML = "it will take times as first login, please wait";
-    //    var blnUserExist = false;
     $.post(serverAddress + "login", {
         username: userid
         , password: password
-    }, function (res) {
-        //        console.log(res);
+    }, function (res) { // check user role to determine which function user can use
         switch (res) {
         case "Administrator":
-            //            console.log("Admin");
             $.cookie('role', 'Administrator');
             $('.admin').css('display', 'block');
             $('.dcc').css('display', 'block');
             break;
         case "A01. CCB Admin":
-            //            console.log("dcc");
             $.cookie('role', 'A01. CCB Admin');
             $('.dcc').css('display', 'block');
             break;
         default:
-            //            console.log("default");
         }
     }).done(function (res) {
         document.getElementById('idSpanLoginResult').innerHTML = "welcome " + res;
@@ -75,16 +60,12 @@ function doLogin() {
         document.getElementById('idSpanLoginResult').innerHTML = "incorrect user or password";
         document.getElementById('idResult').innerHTML = "incorrect user or password";
     }).always(function () {
-        //        alert("finished");
         $("#idSpinner").hide();
         $('#idLoader').delay(1000).fadeOut('fast')
     });
-    //    if (blnUserExist == false) {
-    //        document.getElementById('idSpanLoginResult').innerHTML = "incorrect username or password";
-    //    }
 }
 
-function reLogin() {
+function reLogin() { // for the user who already logged in
     $(".login").hide();
     $("#idBtnLogout").show();
     $('#idDivLogin').hide();
@@ -92,18 +73,14 @@ function reLogin() {
     case "Administrator":
         $('.admin').css('display', 'block');
         $('.dcc').css('display', 'block');
-        //        console.log('admin');
         break;
     case "A01. CCB Admin":
-        //        console.log('dcc');
         $('.dcc').css('display', 'block');
         break;
     default:
     }
     $('#idPuserName').text(userid);
     $('#idPuserName1').text(userid);
-    //    document.getElementById('idPuserName').innerHTML = userid;
-    //    document.getElementById('idPuserName1').innerHTML = userid;
 }
 
 function doLogout() {

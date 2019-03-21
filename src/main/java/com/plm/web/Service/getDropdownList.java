@@ -20,19 +20,15 @@ public class getDropdownList {
 			sResult = "please login first";
 			return sResult;
 		}
-		// Get the Admin instance
-		IAdmin admin = agileSession.getAdminInstance();
-		// Get the List Library
-		IListLibrary listLib = admin.getListLibrary();
-		// Get the Product Lines list
-		IAdminList[] iAdminList = listLib.getAdminLists();
+		
+		IAdmin admin = agileSession.getAdminInstance();// Get the Admin instance
+		IListLibrary listLib = admin.getListLibrary();	// Get the List Library
+		IAdminList[] iAdminList = listLib.getAdminLists();	// Get the Product Lines list
 		JSONArray ja = new JSONArray();
 		for (IAdminList list : iAdminList) {
-//			System.out.println(list.getName());
 			JSONObject jo = new JSONObject();
 			jo.put("listName", list.getName());
 			ja.put(jo);
-//			System.out.println(ja);
 		}
 		JSONObject joR = new JSONObject();
 		joR.put("joR", ja);
