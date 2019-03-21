@@ -37,9 +37,14 @@
                         <option class="res" w3-repeat="joR" style="display:none">{{listName}}</option>
                     </select>
                 </div>
+                <!--
                 <div class="w3-half w3-margin-bottom">
                     <label> List Value:</label>
                     <input id="listValue" class="w3-input w3-border" type="text" required> </div>
+-->
+                <div class="w3-half w3-margin-bottom">
+                    <label> List Value:</label>
+                    <input id="listValue" class="w3-input w3-border" type="text" name="" required> </div>
             </div>
             <input type="button" class="w3-button w3-dark-grey" id="btnListQuery" value="Query">
             <input type="button" class="w3-button w3-dark-grey" id="btnListAdd" value="Add">
@@ -67,7 +72,8 @@
     </div>
     <!-- END PAGE CONTENT -->
     <div id="login-placeholder"> </div>
-    <div id="confirm-placeholder"> </div>
+    <div id="confirmUpdate-placeholder"> </div>
+    <div id="confirmDelete-placeholder"> </div>
     <div class="w3-black" id="loading-placeholder"> </div>
 </body>
 

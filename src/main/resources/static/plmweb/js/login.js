@@ -3,7 +3,7 @@ var password;
 var role;
 $(function () {
     $("#login-placeholder").load("../pages/Login.html", function () {
-        initialize();
+        //        initialize();
         $("#idBtnLogin").click(function () {
             userid = $('#userid').val();
             password = $('#pwd').val();
@@ -13,7 +13,7 @@ $(function () {
         });
         $("#idBtnLogout").click(function () {
             doLogout();
-            initialize();
+            //            initialize();
             //            setTimeout(location.reload.bind(location), 2000);
             //            setTimeout(function () {
             window.location.replace("/");

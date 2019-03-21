@@ -21,7 +21,13 @@ $(function () {
         }
     });
     $("#btnListQuery").click(function () {
-        getListValue();
+        //        console.log($("#dropdownList").val());
+        if ($("#dropdownList").val() != "") {
+            getListValue();
+        }
+        else {
+            alert("pls select a list")
+        }
     });
     $("#btnListAdd").click(function () {
         if ($('#idForm').valid()) {
@@ -40,7 +46,12 @@ $(function () {
     });
     $("#btnListDelete").click(function () {
         if ($('#idForm').valid()) {
-            deleteListValue();
+            if ($("#listValue").val() != "") {
+                deleteListValue();
+            }
+        }
+        else {
+            alert("pls select a row")
         }
     });
     if (window.location.pathname == '/pages/ListMaintain.html') {
@@ -85,20 +96,17 @@ function selectElementContents(el) {
     document.execCommand("Copy");
     alert('table copied.')
 }
-
-function w3_open() {
+/*function w3_open() {
     document.getElementById("main").style.marginLeft = "20%";
     document.getElementById("mySidebar").style.width = "20%";
     document.getElementById("mySidebar").style.display = "block";
     document.getElementById("openNav").style.display = 'none';
-}
-
-function w3_close() {
+}*/
+/*function w3_close() {
     document.getElementById("main").style.marginLeft = "0%";
     document.getElementById("mySidebar").style.display = "none";
     document.getElementById("openNav").style.display = "inline-block";
-}
-
+}*/
 function clearValue() {
     $("input:text").val("");
     $("select").val("");
@@ -114,14 +122,17 @@ function initialize() {
     //    $("#idRTable").hide();
     //    $(".admin").hide();
     //    $(".dcc").hide();
-    $("#result").hide();
-    $(".login").show();
-    $("#idBtnLogout").hide();
+    //    $("#result").hide();
+    //    $(".login").show();
+    //    $("#idBtnLogout").hide();
     //    $(".res").hide();
     //    $(".res").show();
 }
 
 function resultShow() {
+    //    setTimeout(function () {
+    //        window.location.replace("/pages/ListMaintain.html");
+    //    }, 2000);
     $("#result").show();
     $("#idSpinner").hide();
     $('#idLoader').delay(2000).fadeOut(0);
@@ -201,7 +212,7 @@ function Inactivate() {
     var sCol2 = $('#idForm').find("input[name='col2']").val();
     //    var urlFinalBOM = urlBOM + sPN + '&' + sCPN;
     var urlFinal = url + sCol1 + '&' + sCol2;
-    console.log(urlFinal);
+    //    console.log(urlFinal);
     //        console.log(urlFinalCKDID);
     Loading();
     $.get(urlFinal, function (res) {}).done(function (res) {
@@ -267,7 +278,6 @@ function getListValue() {
 }
 
 function addListValue() {
-    $("#result").hide();
     Loading();
     var url = serverAddress + "getListValue/";
     var sListName = $("#dropdownList").val();
@@ -291,63 +301,77 @@ function addListValue() {
 }
 
 function updateListValue() {
-    $("#result").hide();
     var url = serverAddress + "getListValue/";
     var sListName = $("#dropdownList").val();
     var sOlistValue = oListValue;
     var sNlistValue = $("#listValue").val();
     var urlFinal = url + sListName + '&' + sOlistValue + '&' + sNlistValue;
-    $("#idConfirm").show();
-    $("#idConfirmText").text('are you sure update ' + sOlistValue + ' to ' + sNlistValue + '?');
+    $("#idConfirmUpdate").show();
+    $("#idConfirmTextUpdate").text('are you sure update ' + sOlistValue + ' to ' + sNlistValue + '?');
     //    console.log(urlFinal);
     //    $("#idConfirm").show();
-    $("#btnYes").click(function () {
+    $("#btnYesUpdate").unbind().bind('click', function () {
+        //        var aa = $(this);
+        $("#result").hide();
         Loading();
         $("#idLoader").show();
-        $("#idConfirm").hide();
+        $("#idConfirmUpdate").hide();
+        //        console.log(urlFinal);
+        //        $("#btnYesUpdate").prop('disabled', true);
         $.ajax({
             url: urlFinal
             , type: 'PUT'
             , success: function (res) {
                 $("#idResult").text('success: ' + res);
-                getListValue()
-                oListValue = null
+                getListValue();
+                oListValue = null;
                 resultShow();
+                //                aa.prop('disabled', false);
+                //                                $("#btnYesUpdate").prop('disabled', false);
             }
             , error: function (res) {
                 $("#idResult").text('failed: ' + res);
-                oListValue = null
+                oListValue = null;
+                //                window.location.replace("/pages/ListMaintain.html");
                 resultShow();
+                //                aa.prop('disabled', false);
+                //                                $("#btnYesUpdate").prop('disabled', false);
             }
         })
     });
 }
 
 function deleteListValue() {
-    $("#result").hide();
     var url = serverAddress + "getListValue/";
     var sListName = $("#dropdownList").val();
+    //    var sOlistValue = oListValue;
     var sListValue = $("#listValue").val();
     var urlFinal = url + sListName + '&' + sListValue;
-    console.log(urlFinal);
-    $("#idConfirm").show();
-    $("#idConfirmText").text('are you sure delete ' + sListValue + '?');
+    //    var htmlname = document.location.href.match(/[^\/]+$/)[0];
+    //    console.log(urlFinal);
+    $("#idConfirmDelete").show();
+    $("#idConfirmTextDelete").text('are you sure delete ' + sListValue + '?');
     //    console.log(urlFinal);
     //    $("#idConfirm").show();
-    $("#btnYes").click(function () {
+    $("#btnYesDelete").unbind().bind('click', function () {
+        //        if(htmlname=='ListMaintain.html'){}
+        $("#result").hide();
         Loading();
         $("#idLoader").show();
-        $("#idConfirm").hide();
+        $("#idConfirmDelete").hide();
+        //        console.log(222);
         $.ajax({
             url: urlFinal
             , type: 'DELETE'
             , success: function (res) {
                 $("#idResult").text('success: ' + res);
-                getListValue()
+                getListValue();
+                //                oListValue = null;
                 resultShow();
             }
             , error: function (res) {
                 $("#idResult").text('failed: ' + res);
+                //                oListValue = null;
                 resultShow();
             }
         })

@@ -128,23 +128,23 @@ public class WebRestController {
 		return sResult;
 	}
 
-	@CrossOrigin
-	@RequestMapping(value = { "/listMaintain/{listName}&{listValue}" }, method = { RequestMethod.GET })
-	public String ListMaintain(@ModelAttribute("message") String msg, @PathVariable String listName,
-			@PathVariable String listValue) {
-		String sResult;
-		try {
-			sResult = this.ListMaintain.listMaintain(agileSession, listName, listValue);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			return e.getMessage();
-		}
-		return sResult;
-	}
+//	@CrossOrigin
+//	@RequestMapping(value = { "/listMaintain/{listName}&{listValue}" }, method = { RequestMethod.GET })
+//	public String ListMaintain(@ModelAttribute("message") String msg, @PathVariable String listName,
+//			@PathVariable String listValue) {
+//		String sResult;
+//		try {
+//			sResult = this.ListMaintain.listMaintain(agileSession, listName, listValue);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			return e.getMessage();
+//		}
+//		return sResult;
+//	}
 
 	@CrossOrigin
 	@RequestMapping(value = { "/getDropdownList" }, method = { RequestMethod.GET }, produces = { "application/json" })
-	public String getDropdownList(@ModelAttribute("message") String msg) {
+	public String getDropdownList() {
 		String sResult;
 		try {
 			sResult = this.getDropdownList.getDropdownList(agileSession);
@@ -158,7 +158,7 @@ public class WebRestController {
 	@CrossOrigin
 	@RequestMapping(value = { "/getListValue/{listName}" }, method = { RequestMethod.GET }, produces = {
 			"application/json" })
-	public String getListValue(@ModelAttribute("message") String msg, @PathVariable String listName) {
+	public String getListValue(@PathVariable String listName) {
 		String sResult = null;
 		try {
 			sResult = this.ListValueMaintain.getListValue(agileSession, listName);
@@ -171,7 +171,7 @@ public class WebRestController {
 
 	@CrossOrigin
 	@RequestMapping(value = { "/getListValue/{listName}&{listValue}" }, method = { RequestMethod.POST })
-	public String postListValue(@ModelAttribute("message") String msg, @PathVariable String listName,
+	public String postListValue(@PathVariable String listName,
 			@PathVariable String listValue) {
 		String sResult = null;
 		try {
@@ -185,7 +185,7 @@ public class WebRestController {
 
 	@CrossOrigin
 	@RequestMapping(value = { "/getListValue/{listName}&{oListValue}&{nListValue}" }, method = { RequestMethod.PUT })
-	public String putListValue(@ModelAttribute("message") String msg, @PathVariable String listName,
+	public String putListValue(@PathVariable String listName,
 			@PathVariable String oListValue, @PathVariable String nListValue) {
 		String sResult = null;
 		try {

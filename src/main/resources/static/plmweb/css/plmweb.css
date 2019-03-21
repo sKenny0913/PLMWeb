@@ -40,8 +40,16 @@
     display: none;
 }
 
-link {
-  display: none;
+.login {
+    display: block;
+}
+
+#idBtnLogout {
+    display: none;
+}
+
+#result {
+    display: none;
 }
 
 body,
